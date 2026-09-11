@@ -1,0 +1,25 @@
+# Facility AI Assistant 構成図
+
+```mermaid
+flowchart LR
+  D[公開可能な架空 PDF / TXT] --> R[文書登録・ページ保持]
+  R --> C[チャンク分割]
+  Q[設備に関する質問] --> S[語彙検索・閾値・Top K]
+  C --> S
+  S --> G{安全ガード}
+  G -->|危険作業・法令・緊急| H[管理者・有資格者・専門業者確認]
+  G -->|安全な質問| A{Local LLM opt-in}
+  A -->|未設定・失敗| F[retrieval fallback]
+  A -->|loopback + API key| L[OpenAI互換 Local LLM
+実Gemma endpoint未接続]
+  F --> O[回答 + 文書名 + ページ + 根拠]
+  L --> O
+```
+
+## 境界
+
+- 入力は公開可能な架空サンプル文書に限定する。
+- 検索結果は文書名・ページ・根拠箇所を伴う。
+- 根拠不足、危険作業、法令判断、緊急時は断定せず確認へ戻す。
+- Local LLM は loopback と明示的な opt-in が必要で、未設定・失敗時は retrieval fallback に切り替える。
+- 実Gemma endpoint、本番文書、認証、監査ログ、CloudflareサービスはこのIssueの対象外である。
