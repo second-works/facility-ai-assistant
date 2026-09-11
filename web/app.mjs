@@ -36,7 +36,7 @@ export function renderResult(result, nodes) {
 
 function statusLabel(status) {
   const labels = {
-    ANSWERED: "根拠あり / fallback",
+    ANSWERED: "根拠あり / fallback（LLM未接続）",
     INSUFFICIENT_EVIDENCE: "根拠不足",
     NO_QUERY: "入力待ち",
     SAFETY_REVIEW_REQUIRED: "安全確認が必要",
