@@ -29,7 +29,7 @@ test("整合性: fallback回答のsourcesは検索結果と同じ出典を保持
   assert.equal(result.sources.length, 2);
   assert.equal(result.sources[0].documentId, "generator-monthly-inspection");
   assert.equal(result.sources[0].filename, "data/samples/generator-monthly-inspection.txt");
-  assert.ok(result.sources.every((source) => result.answer === undefined));
+  assert.ok(result.sources.every((source) => !("answer" in source)));
   assert.ok(result.answer.includes("非常用発電機 月例点検基準"));
 });
 
