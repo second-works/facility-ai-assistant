@@ -37,10 +37,10 @@ flowchart LR
 | コンポーネント | MVPでの役割 | 現在の状態 |
 | --- | --- | --- |
 | Next.js / React / TypeScript | 質問、回答、根拠表示、スマートフォン対応 | 設計中 |
-| RAGサービス | 文書登録、チャンク、検索、閾値、出典 | 文書登録・チャンク・語彙検索・閾値実装済み |
+| RAGサービス | 文書登録、チャンク、検索、閾値、出典 | 文書登録・チャンク・語彙検索・閾値・質問状態実装済み |
 | PDF/TXTサンプル | 施設管理の代表文書 | 架空TXTサンプル4文書を実装 |
 | OpenAI互換API | Gemma等の生成経路 | 未接続 |
-| fallback | LLM未接続時の根拠付き応答 | 設計対象 |
+| fallback | LLM未接続時の根拠付き応答 | retrieval fallback実装済み、実LLM未接続 |
 | Cloudflare R2 / Workers | 非公開文書と公開境界 | 将来接続 |
 | Vector Search | 日本語検索評価後の拡張 | 未実装 |
 
@@ -79,13 +79,14 @@ AIの回答を設備判断の最終結論として扱いません。回答は次
 - Facility AI AssistantのMVP設計、代表ユースケース、安全境界、Issue分解
 - 公開可能な架空サンプル4文書、ページ保持、決定的なチャンク化、Unit Test
 - 決定的な語彙ベース検索、Top K、スコア閾値、出典結果、検索Unit Test
+- 質問状態（根拠あり・根拠不足・空質問・安全確認）とretrieval fallback
 
 ### 未実装
 
-- Next.js UIと質問API
+- Next.js UIとHTTPルーティング
 - PDF実文書の抽出（架空TXTサンプルの登録・チャンク化は実装済み）
 - Embedding・Vector Searchによる高度な検索
-- fallback回答サービス
+- 実LLM回答アダプター
 - OpenAI互換Local LLM接続
 - R2、Workers、Tunnel、Access、Vector Search
 - 認証・認可、監査ログ、複数テナント
