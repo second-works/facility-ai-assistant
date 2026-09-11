@@ -128,7 +128,7 @@ run_generic_stages() {
   local script
   for stage in lint typecheck test build; do
     script="${ROOT_DIR}/scripts/${stage}.sh"
-    if [[ -x "${script}" ]]; then
+    if [[ -f "${script}" ]]; then
       run_stage "${stage}" bash "${script}"
     else
       skip_stage "${stage}" "${script} is not executable"
