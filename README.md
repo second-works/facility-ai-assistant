@@ -104,7 +104,7 @@ python3 -m http.server 4175 --bind 127.0.0.1
 起動後、ブラウザで http://127.0.0.1:4175/web/ を開いてください。
 受け入れ結果は [docs/demo-acceptance.md](docs/demo-acceptance.md)、構成図は [docs/architecture/facility-ai-assistant.mmd](docs/architecture/facility-ai-assistant.mmd) に記録しています。
 
-画面証跡: [デスクトップ](docs/assets/facility-ai-assistant-desktop.png) / [モバイル](docs/assets/facility-ai-assistant-mobile.png)
+画面証跡: [デスクトップ](docs/assets/facility-ai-assistant-desktop.jpg) / [モバイル](docs/assets/facility-ai-assistant-mobile.jpg)
 
 ## 開発順序
 
