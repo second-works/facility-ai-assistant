@@ -6,7 +6,7 @@ import { inspectQuestion, SAFETY_REVIEW_ANSWER } from "../src/safety-guard.mjs";
 test("正常: 安全な確認質問はLLM利用可能と判定する", () => {
   const result = inspectQuestion("空調の異音を確認する項目は？");
 
-  assert.equal(result.normalizedQuery, "空調の異音を確認する項目は？");
+  assert.equal(result.normalizedQuery, "空調の異音を確認する項目は?");
   assert.equal(result.safeForLlm, true);
 });
 
