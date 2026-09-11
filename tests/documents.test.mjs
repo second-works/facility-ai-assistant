@@ -73,6 +73,10 @@ test("異常系: 空文書、不正メタデータ、未対応形式、重複ID�
     id: "bad-document", title: "不正", format: "txt", sourcePath: "data/samples/bad.txt",
     visibility: "PUBLIC", pages: [{ number: 1, text: "" }],
   }), /non-empty string/);
+  assert.throws(() => normalizeDocument({
+    id: "bad-document", title: "不正", format: "txt", sourcePath: "data/samples/bad.txt",
+    visibility: "PUBLIC", pages: [{ number: 2, text: "二ページ目" }, { number: 1, text: "逆順" }],
+  }), /ascending order/);
   assert.throws(() => registerDocuments([
     { id: "duplicate-document", title: "重複1", format: "txt", sourcePath: "data/samples/one.txt", visibility: "PUBLIC", pages: [{ number: 1, text: "本文" }] },
     { id: "duplicate-document", title: "重複2", format: "txt", sourcePath: "data/samples/two.txt", visibility: "PUBLIC", pages: [{ number: 1, text: "本文" }] },
