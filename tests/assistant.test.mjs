@@ -121,3 +121,24 @@ test("安全境界: 危険質問はLocal LLMへ渡さない", async () => {
   assert.equal(called, false);
   assert.doesNotMatch(result.answer, /危険な操作手順/);
 });
+
+test("安全境界: 危険なLLM生成本文を表示せず安全確認へ戻す", async () => {
+  const result = await answerQuestionWithLlm(createFixture(), "空調の異音", {
+    llmAdapter: async () => ({ mode: "local-llm", text: "電気盤を分解して修理してください。" }),
+  });
+
+  assert.equal(result.status, "SAFETY_REVIEW_REQUIRED");
+  assert.equal(result.mode, "local-llm-blocked");
+  assert.equal(result.fallbackReason, "OUTPUT_SAFETY_BLOCK");
+  assert.doesNotMatch(result.answer, /電気盤を分解/);
+});
+
+test("異常系: Local LLMの不正な統合結果をfallbackへ戻す", async () => {
+  const result = await answerQuestionWithLlm(createFixture(), "空調の異音", {
+    llmAdapter: async () => ({ mode: "local-llm", text: "" }),
+  });
+
+  assert.equal(result.mode, "retrieval-fallback");
+  assert.equal(result.fallbackReason, "INVALID_RESPONSE");
+  assert.match(result.answer, /retrieval fallback/);
+});
