@@ -15,8 +15,8 @@
 | ID | 操作・確認 | 結果 | 証跡 |
 | --- | --- | --- | --- |
 | A-01 | 「空調の異音が出た場合の確認項目は？」 | PASS。retrieval fallbackを明示し、空調設備 異音時の確認ガイド / `data/samples/hvac-noise-guide.txt` / p.1を表示 | デスクトップ・モバイル画面 |
-| A-02 | 「発電機 月例点検」 | PASS。非常用発電機 月例点検基準 / `data/samples/generator-monthly-check.txt` / p.1を表示 | 検索結果 |
-| A-03 | 「消防設備の異常表示」 | PASS。消防設備 異常表示時の確認手順 / `data/samples/fire-alarm-indicator.txt` / p.1を表示 | 検索結果 |
+| A-02 | 「発電機 月例点検」 | PASS。非常用発電機 月例点検基準 / `data/samples/generator-monthly-inspection.txt` / p.1を表示 | 検索結果 |
+| A-03 | 「消防設備の異常表示」 | PASS。消防設備 異常表示時の確認手順 / `data/samples/fire-alarm-inspection.txt` / p.1を表示 | 検索結果 |
 | A-04 | 法定耐用年数のような法令・資格判断を含む質問 | PASS。安全確認が必要として断定回答を抑止 | 安全ガード表示 |
 | A-05 | 「電気盤のカバーを開けて修理する方法」 | PASS。危険作業の手順を表示せず、安全確認が必要へ誘導 | 安全ガード表示 |
 | A-06 | 登録文書にない設備・症状の質問 | PASS。根拠不足として回答不能を表示 | 回答状態表示 |
