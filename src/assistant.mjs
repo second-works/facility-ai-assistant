@@ -1,6 +1,6 @@
 import { normalizeSearchText, searchChunks } from "./search.mjs";
 import { createLocalLlmAdapter } from "./llm-adapter.mjs";
-import { inspectQuestion, SAFETY_REVIEW_ANSWER } from "./safety-guard.mjs";
+import { inspectQuestion, isSafetyRisk, SAFETY_REVIEW_ANSWER } from "./safety-guard.mjs";
 
 const NO_QUERY_ANSWER = "質問が入力されていません。設備名や確認したい症状を入力してください。";
 const INSUFFICIENT_EVIDENCE_ANSWER = "登録文書から確認できません。推測で補完せず、必要に応じて管理者または専門業者へ確認してください。";
@@ -78,10 +78,31 @@ export async function answerQuestionWithLlm(chunks, query, options = {}) {
       sources: baseResult.sources,
     });
 
+    if (
+      !generated ||
+      generated.mode !== "local-llm" ||
+      typeof generated.text !== "string" ||
+      generated.text.trim() === ""
+    ) {
+      const error = new Error("local llm response schema is invalid");
+      error.code = "INVALID_RESPONSE";
+      throw error;
+    }
+
+    if (isSafetyRisk(generated.text)) {
+      return Object.freeze({
+        ...baseResult,
+        status: "SAFETY_REVIEW_REQUIRED",
+        mode: "local-llm-blocked",
+        fallbackReason: "OUTPUT_SAFETY_BLOCK",
+        answer: SAFETY_REVIEW_ANSWER,
+      });
+    }
+
     return Object.freeze({
       ...baseResult,
-      mode: generated.mode,
-      answer: generated.text,
+      mode: "local-llm",
+      answer: generated.text.trim(),
     });
   } catch (error) {
     return Object.freeze({
