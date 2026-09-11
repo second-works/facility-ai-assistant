@@ -42,6 +42,11 @@ function normalizePages(pages) {
     throw new RangeError("pages must contain at least one page");
   }
   const normalized = pages.map(normalizePage);
+  for (let index = 1; index < normalized.length; index += 1) {
+    if (normalized[index].number <= normalized[index - 1].number) {
+      throw new RangeError("page numbers must be in ascending order");
+    }
+  }
   const pageNumbers = new Set(normalized.map((page) => page.number));
   if (pageNumbers.size !== normalized.length) {
     throw new RangeError("page numbers must be unique");
@@ -116,7 +121,9 @@ export function parsePagedText(rawText) {
 export function loadSampleDocuments(repositoryRoot = REPOSITORY_ROOT) {
   const documents = SAMPLE_DOCUMENT_SPECS.map((spec) => {
     const rawText = readFileSync(join(repositoryRoot, spec.sourcePath), "utf8");
-    return normalizeDocument({ ...spec, pages: parsePagedText(rawText) });
+    const pages = parsePagedText(rawText);
+    pages.forEach((page) => assertPublicSampleText(page.text));
+    return normalizeDocument({ ...spec, pages });
   });
   return registerDocuments(documents);
 }
