@@ -97,7 +97,7 @@ export function searchChunks(chunks, query, options = {}) {
       text: chunk.text,
       score: scoreChunk(normalizedQuery, chunk),
     }))
-    .filter((result) => result.score >= threshold)
+    .filter((result) => result.score > 0 && result.score >= threshold)
     .sort((left, right) => right.score - left.score || left.chunkId.localeCompare(right.chunkId))
     .slice(0, topK)
     .map((result) => Object.freeze(result));
