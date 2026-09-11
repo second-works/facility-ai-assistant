@@ -76,6 +76,7 @@ test("異常系: 空質問、未該当、不正な閾値、壊れたチャンク
   assert.equal(searchChunks(chunks, "   ").status, "NO_QUERY");
   assert.deepEqual(searchChunks(chunks, "法定耐用年数", { threshold: 0.2 }).results, []);
   assert.equal(searchChunks(chunks, "法定耐用年数", { threshold: 0.2 }).status, "NO_MATCH");
+  assert.deepEqual(searchChunks(chunks, "法定耐用年数", { threshold: 0 }).results, []);
   assert.throws(() => searchChunks(chunks, "空調", { threshold: -0.1 }), /number from 0 to 1/);
   assert.throws(() => searchChunks(chunks, "空調", { threshold: 1.1 }), /number from 0 to 1/);
   assert.throws(() => searchChunks([createChunk("bad", "")], "空調"), /non-empty string/);
