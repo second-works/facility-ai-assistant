@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { chunkDocuments, loadSampleDocuments } from "../src/documents.mjs";
-import { answerQuestion } from "../src/assistant.mjs";
+import { answerQuestion, answerQuestionWithLlm } from "../src/assistant.mjs";
 
 function createFixture() {
   return chunkDocuments(loadSampleDocuments(), { maxChars: 180, overlapChars: 20 });
@@ -75,4 +75,49 @@ test("回帰: 検索入力の不正状態を握りつぶさない", () => {
   assert.throws(() => answerQuestion([], null), /query must be a string/);
   assert.throws(() => answerQuestion(null, "空調"), /chunks must be an array/);
   assert.throws(() => answerQuestion([{ id: "broken" }], "空調"), /documentId/);
+});
+
+test("正常: Local LLM回答と検索出典を統合し、modeを区別する", async () => {
+  const result = await answerQuestionWithLlm(createFixture(), "空調の異音", {
+    llmAdapter: async ({ question, sources }) => {
+      assert.equal(question, "空調の異音");
+      assert.ok(sources.length > 0);
+      return { mode: "local-llm", text: "生成された確認要約。" };
+    },
+  });
+
+  assert.equal(result.status, "ANSWERED");
+  assert.equal(result.mode, "local-llm");
+  assert.equal(result.answer, "生成された確認要約。");
+  assert.ok(result.sources.length > 0);
+});
+
+test("異常系: Local LLM失敗時は出典を保ったfallbackへ戻す", async () => {
+  const result = await answerQuestionWithLlm(createFixture(), "空調の異音", {
+    llmAdapter: async () => {
+      const error = new Error("request failed");
+      error.code = "NETWORK_ERROR";
+      throw error;
+    },
+  });
+
+  assert.equal(result.mode, "retrieval-fallback");
+  assert.equal(result.fallbackReason, "NETWORK_ERROR");
+  assert.ok(result.sources.length > 0);
+  assert.match(result.answer, /retrieval fallback/);
+  assert.match(result.answer, /Local LLMは利用できない/);
+});
+
+test("安全境界: 危険質問はLocal LLMへ渡さない", async () => {
+  let called = false;
+  const result = await answerQuestionWithLlm(createFixture(), "電気盤を修理する方法", {
+    llmAdapter: async () => {
+      called = true;
+      return { mode: "local-llm", text: "危険な操作手順" };
+    },
+  });
+
+  assert.equal(result.status, "SAFETY_REVIEW_REQUIRED");
+  assert.equal(called, false);
+  assert.doesNotMatch(result.answer, /危険な操作手順/);
 });
