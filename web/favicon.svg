@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Facility AI Assistant">
+  <rect width="64" height="64" rx="14" fill="#12372a"/>
+  <path d="M18 17h28v8H26v7h16v8H26v14h-8V17Z" fill="#f7f4ea"/>
+  <circle cx="47" cy="48" r="7" fill="#f5b544"/>
+</svg>
