@@ -5,6 +5,13 @@ const SAFETY_PATTERN = /(電気|高所|火気|圧力|回転体|分解|修理|カ
 export const SAFETY_REVIEW_ANSWER =
   "この質問はAIだけで安全に判断できません。設備の操作・危険作業・法令判断は行わず、現場の正式手順、管理者、有資格者または専門業者へ確認してください。";
 
+export function isSafetyRisk(text) {
+  if (typeof text !== "string") {
+    return true;
+  }
+  return SAFETY_PATTERN.test(normalizeSearchText(text));
+}
+
 export function inspectQuestion(question) {
   if (typeof question !== "string") {
     throw new TypeError("query must be a string");
@@ -13,6 +20,6 @@ export function inspectQuestion(question) {
   const normalized = normalizeSearchText(question);
   return Object.freeze({
     normalizedQuery: normalized,
-    safeForLlm: !SAFETY_PATTERN.test(normalized),
+    safeForLlm: !isSafetyRisk(normalized),
   });
 }
