@@ -1,10 +1,10 @@
 import { normalizeSearchText, searchChunks } from "./search.mjs";
-
-const SAFETY_PATTERN = /(電気|高所|火気|圧力|回転体|分解|修理|カバーを開|配線|感電|火災|煙|緊急|法令|法定|資格|耐用年数|適合)/u;
+import { createLocalLlmAdapter } from "./llm-adapter.mjs";
+import { inspectQuestion, SAFETY_REVIEW_ANSWER } from "./safety-guard.mjs";
 
 const NO_QUERY_ANSWER = "質問が入力されていません。設備名や確認したい症状を入力してください。";
 const INSUFFICIENT_EVIDENCE_ANSWER = "登録文書から確認できません。推測で補完せず、必要に応じて管理者または専門業者へ確認してください。";
-const SAFETY_REVIEW_ANSWER = "この質問はAIだけで安全に判断できません。設備の操作・危険作業・法令判断は行わず、現場の正式手順、管理者、有資格者または専門業者へ確認してください。";
+const LLM_FALLBACK_NOTE = "Local LLMは利用できないため、retrieval fallbackを表示しています。";
 
 function freezeSources(sources) {
   return Object.freeze(sources.map((source) => Object.freeze({ ...source })));
@@ -36,7 +36,7 @@ export function answerQuestion(chunks, query, options = {}) {
     });
   }
 
-  if (SAFETY_PATTERN.test(normalizedQuery)) {
+  if (!inspectQuestion(normalizedQuery).safeForLlm) {
     return Object.freeze({
       status: "SAFETY_REVIEW_REQUIRED",
       mode: "retrieval-fallback",
@@ -63,4 +63,32 @@ export function answerQuestion(chunks, query, options = {}) {
     answer: buildFallbackAnswer(sources),
     sources,
   });
+}
+
+export async function answerQuestionWithLlm(chunks, query, options = {}) {
+  const baseResult = answerQuestion(chunks, query, options);
+  if (baseResult.status !== "ANSWERED" || (!options.llmAdapter && !options.llm)) {
+    return baseResult;
+  }
+
+  try {
+    const adapter = options.llmAdapter || createLocalLlmAdapter(options.llm);
+    const generated = await adapter({
+      question: baseResult.query,
+      sources: baseResult.sources,
+    });
+
+    return Object.freeze({
+      ...baseResult,
+      mode: generated.mode,
+      answer: generated.text,
+    });
+  } catch (error) {
+    return Object.freeze({
+      ...baseResult,
+      mode: "retrieval-fallback",
+      fallbackReason: error?.code || "LLM_ERROR",
+      answer: baseResult.answer + "\n\n" + LLM_FALLBACK_NOTE,
+    });
+  }
 }
