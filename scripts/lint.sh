@@ -9,8 +9,8 @@ for path in data/samples/*.txt; do
   test -s "$path"
 done
 
-test -s docs/assets/facility-ai-assistant-desktop.png
-test -s docs/assets/facility-ai-assistant-mobile.png
+test -s docs/assets/facility-ai-assistant-desktop.jpg
+test -s docs/assets/facility-ai-assistant-mobile.jpg
 
 node --check src/documents.mjs
 node --check src/search.mjs
