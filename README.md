@@ -2,7 +2,7 @@
 
 施設管理の設備マニュアル・点検基準・過去トラブル記録を検索し、根拠付きで対応候補と確認項目を提示する業務特化AIのMVP設計リポジトリです。
 
-> 現在は設計・開発準備段階です。Live Demo、実Gemma接続、本番文書登録はまだ実装していません。
+> 現在は公開可能な架空サンプルによるローカルMVPデモです。実Gemma接続、本番文書登録、Production deployは未実施です。
 
 ## 解決する業務課題
 
@@ -82,6 +82,7 @@ AIの回答を設備判断の最終結論として扱いません。回答は次
 - 質問状態（根拠あり・根拠不足・空質問・安全確認）とretrieval fallback
 - PC/スマートフォン対応の静的Chat UIとブラウザ確認用デモ
 - loopback限定・fetch注入対応のOpenAI互換Local LLMアダプター、安全ガード、失敗時fallback
+- 実ブラウザによるA-01〜A-08受け入れ記録、PC/モバイル画面証跡、構成図
 
 ### 未実装
 
@@ -92,6 +93,19 @@ AIの回答を設備判断の最終結論として扱いません。回答は次
 - R2、Workers、Tunnel、Access、Vector Search
 - 認証・認可、監査ログ、複数テナント
 
+## ローカルデモ
+
+公開可能な架空サンプルだけを使う静的デモです。
+
+```bash
+python3 -m http.server 4175 --bind 127.0.0.1
+```
+
+起動後、ブラウザで http://127.0.0.1:4175/web/ を開いてください。
+受け入れ結果は [docs/demo-acceptance.md](docs/demo-acceptance.md)、構成図は [docs/architecture/facility-ai-assistant.mmd](docs/architecture/facility-ai-assistant.mmd) に記録しています。
+
+画面証跡: [デスクトップ](docs/assets/facility-ai-assistant-desktop.jpg) / [モバイル](docs/assets/facility-ai-assistant-mobile.jpg)
+
 ## 開発順序
 
 設計Issueを先に完了し、その後は各Issueを独立したPRで進めます。
@@ -101,7 +115,7 @@ AIの回答を設備判断の最終結論として扱いません。回答は次
 3. 質問APIとfallback
 4. UIとレスポンシブ表示
 5. Local LLMアダプターと安全ガード
-6. 手動受け入れ、README、スクリーンショット
+6. 手動受け入れ、README、スクリーンショット（完了）
 
 詳細は [docs/mvp-design.md](docs/mvp-design.md)、[docs/acceptance-scenarios.md](docs/acceptance-scenarios.md)、[docs/issue-breakdown.md](docs/issue-breakdown.md) を参照してください。
 

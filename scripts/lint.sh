@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-for path in README.md AGENTS.md docs/mvp-design.md docs/acceptance-scenarios.md docs/issue-breakdown.md src/documents.mjs src/search.mjs src/assistant.mjs src/llm-adapter.mjs src/safety-guard.mjs web/index.html web/app.mjs web/demo-data.mjs web/styles.css tests/documents.test.mjs tests/search.test.mjs tests/assistant.test.mjs tests/llm-adapter.test.mjs tests/safety-guard.test.mjs tests/ui.test.mjs; do
+for path in README.md AGENTS.md docs/mvp-design.md docs/acceptance-scenarios.md docs/issue-breakdown.md docs/demo-acceptance.md docs/architecture/facility-ai-assistant.mmd src/documents.mjs src/search.mjs src/assistant.mjs src/llm-adapter.mjs src/safety-guard.mjs web/index.html web/app.mjs web/demo-data.mjs web/styles.css tests/documents.test.mjs tests/search.test.mjs tests/assistant.test.mjs tests/llm-adapter.test.mjs tests/safety-guard.test.mjs tests/ui.test.mjs; do
   test -s "$path"
 done
 
 for path in data/samples/*.txt; do
   test -s "$path"
 done
+
+test -s docs/assets/facility-ai-assistant-desktop.jpg
+test -s docs/assets/facility-ai-assistant-mobile.jpg
 
 node --check src/documents.mjs
 node --check src/search.mjs
