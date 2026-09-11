@@ -34,7 +34,7 @@ test("整合性: fallback回答のsourcesは検索結果と同じ出典を保持
 });
 
 test("境界値: 根拠なしは推測せずINSUFFICIENT_EVIDENCEを返す", () => {
-  const result = answerQuestion(createFixture(), "文書にない製品の法定耐用年数", { threshold: 0.2 });
+  const result = answerQuestion(createFixture(), "文書にないポンプの症状", { threshold: 0.2 });
 
   assert.equal(result.status, "INSUFFICIENT_EVIDENCE");
   assert.equal(result.mode, "retrieval-fallback");
