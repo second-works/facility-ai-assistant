@@ -10,8 +10,7 @@ flowchart LR
   G -->|危険作業・法令・緊急| H[管理者・有資格者・専門業者確認]
   G -->|安全な質問| A{Local LLM opt-in}
   A -->|未設定・失敗| F[retrieval fallback]
-  A -->|loopback + API key| L[OpenAI互換 Local LLM
-実Gemma endpoint未接続]
+  A -->|loopback + API key| L[OpenAI互換 Local LLM / 実Gemma endpoint未接続]
   F --> O[回答 + 文書名 + ページ + 根拠]
   L --> O
 ```
