@@ -24,6 +24,22 @@
         <p>このデモは設備判断の最終結論ではありません。危険作業・法令判断・緊急対応は、現場の正式手順、管理者、有資格者、専門業者を優先してください。</p>
       </section>
 
+      <section class="panel" aria-labelledby="architecture-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">WHY THIS MVP</p>
+            <h2 id="architecture-heading">軽量な静的構成から、安全なAI導入へ</h2>
+          </div>
+        </div>
+        <p>このデモは、サーバーやデータベースを必要としない静的HTML / JavaScript構成です。ブラウザとCloudflare Pagesだけで共有できるため、実データやSecretsを公開せずに、施設管理の検索・出典表示・安全ガードをすぐ確認できます。</p>
+        <p>将来のLLM接続に備え、OpenAI互換Local LLMアダプターも実装済みです。接続先・APIキー・timeout・応答形式を検証し、LLM未設定や失敗時は根拠付きfallbackへ戻します。</p>
+        <ul>
+          <li>静的HTML: 低コストで共有しやすく、公開デモの境界を小さく保てる</li>
+          <li>LLMアダプター: ローカルLLMへ安全に段階接続できる</li>
+          <li>施設特化: 根拠不足や危険作業を現場確認へ戻す</li>
+        </ul>
+      </section>
+
       <section class="panel" aria-labelledby="question-heading">
         <div class="section-heading">
           <div>
